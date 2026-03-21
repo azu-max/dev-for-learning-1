@@ -1,2 +1,5 @@
+# OS generated files
+.DS_Store
+
 # Quiz results (personal learning records, not committed)
 quiz-results/
