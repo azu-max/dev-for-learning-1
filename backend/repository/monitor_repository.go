@@ -89,6 +89,29 @@ func (r *MonitorRepository) GetByID(ctx context.Context, id string) (*model.Moni
 	return &m, nil
 }
 
+// GetAllActive はアクティブなMonitorをすべて取得する（Worker用）
+func (r *MonitorRepository) GetAllActive(ctx context.Context) ([]model.Monitor, error) {
+	query := `SELECT id, name, url, interval_seconds, is_active, created_at, updated_at
+		FROM monitors WHERE is_active = true ORDER BY created_at`
+
+	rows, err := r.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var monitors []model.Monitor
+	for rows.Next() {
+		var m model.Monitor
+		err := rows.Scan(&m.ID, &m.Name, &m.URL, &m.IntervalSeconds, &m.IsActive, &m.CreatedAt, &m.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+		monitors = append(monitors, m)
+	}
+	return monitors, nil
+}
+
 // Delete は指定IDのMonitorをDBから削除する
 func (r *MonitorRepository) Delete(ctx context.Context, id string) error {
 	query := `DELETE FROM monitors WHERE id = $1`
