@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"os"
@@ -114,6 +115,16 @@ func main() {
 	http.HandleFunc("/api/health", healthHandler)
 	http.HandleFunc("/api/monitors", monitorHandler.HandleMonitors)
 	http.HandleFunc("/api/monitors/", monitorHandler.HandleMonitorByID)
+
+	// Sentryテスト用エンドポイント（動作確認後に削除）
+	http.HandleFunc("/api/sentry-test", func(w http.ResponseWriter, r *http.Request) {
+		sentry.CaptureException(errors.New("Sentry test error from health-monitor"))
+		sentry.Flush(2 * time.Second)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]string{
+			"message": "Test error sent to Sentry!",
+		})
+	})
 
 	// --- HTTPサーバー起動 ---
 	server := &http.Server{Addr: ":8080"}
