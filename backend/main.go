@@ -16,6 +16,7 @@ import (
 	"github.com/azu-max/dev-for-learning-1/backend/service"
 	"github.com/azu-max/dev-for-learning-1/backend/worker"
 
+	"github.com/getsentry/sentry-go"
 	_ "github.com/lib/pq" // PostgreSQLドライバ（init()だけ使う）
 )
 
@@ -34,6 +35,20 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// --- Sentry初期化 ---
+	sentryDSN := os.Getenv("SENTRY_DSN")
+	if sentryDSN == "" {
+		log.Println("Warning: SENTRY_DSN is not set, Sentry disabled")
+	}
+	if err := sentry.Init(sentry.ClientOptions{
+		Dsn:         sentryDSN,
+		Environment: os.Getenv("APP_ENV"), // "development" / "production"
+		TracesSampleRate: 1.0,             // 開発中は100%サンプリング
+	}); err != nil {
+		log.Printf("Sentry init failed: %v", err)
+	}
+	defer sentry.Flush(2 * time.Second) // シャットダウン前に未送信イベントを送る
+
 	// --- DB接続 ---
 	databaseURL := os.Getenv("DATABASE_URL")
 	if databaseURL == "" {
