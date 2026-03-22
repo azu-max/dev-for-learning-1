@@ -1,16 +1,20 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/azu-max/dev-for-learning-1/backend/handler"
 	"github.com/azu-max/dev-for-learning-1/backend/repository"
 	"github.com/azu-max/dev-for-learning-1/backend/service"
+	"github.com/azu-max/dev-for-learning-1/backend/worker"
 
 	_ "github.com/lib/pq" // PostgreSQLドライバ（init()だけ使う）
 )
@@ -60,9 +64,23 @@ func main() {
 		updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 	)`
 	if _, err := db.Exec(createTableSQL); err != nil {
-		log.Fatalf("Failed to create table: %v", err)
+		log.Fatalf("Failed to create monitors table: %v", err)
 	}
-	log.Println("Database table ready")
+
+	createCheckResultsSQL := `
+	CREATE TABLE IF NOT EXISTS check_results (
+		id TEXT PRIMARY KEY,
+		monitor_id TEXT NOT NULL REFERENCES monitors(id) ON DELETE CASCADE,
+		status_code INTEGER NOT NULL DEFAULT 0,
+		response_time INTEGER NOT NULL DEFAULT 0,
+		is_healthy BOOLEAN NOT NULL DEFAULT false,
+		error_message TEXT NOT NULL DEFAULT '',
+		checked_at TIMESTAMP NOT NULL DEFAULT NOW()
+	)`
+	if _, err := db.Exec(createCheckResultsSQL); err != nil {
+		log.Fatalf("Failed to create check_results table: %v", err)
+	}
+	log.Println("Database tables ready")
 
 	// --- レイヤーの組み立て ---
 	// Repository → Service → Handler の順に生成
@@ -70,13 +88,42 @@ func main() {
 	monitorSvc := service.NewMonitorService(monitorRepo)
 	monitorHandler := handler.NewMonitorHandler(monitorSvc)
 
+	// CheckResult用のRepository
+	checkResultRepo := repository.NewCheckResultRepository(db)
+
+	// --- Worker起動 ---
+	checker := worker.NewHealthChecker(monitorSvc, checkResultRepo, 30*time.Second)
+	go checker.Start() // goroutineでバックグラウンド実行
+
 	// --- ルーティング ---
 	http.HandleFunc("/api/health", healthHandler)
 	http.HandleFunc("/api/monitors", monitorHandler.HandleMonitors)
 	http.HandleFunc("/api/monitors/", monitorHandler.HandleMonitorByID)
 
-	log.Println("API server starting on :8080")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		log.Fatal(err)
+	// --- HTTPサーバー起動 ---
+	server := &http.Server{Addr: ":8080"}
+
+	// goroutineでサーバー起動（ブロッキングなので別スレッドで）
+	go func() {
+		log.Println("API server starting on :8080")
+		if err := server.ListenAndServe(); err != http.ErrServerClosed {
+			log.Fatalf("Server error: %v", err)
+		}
+	}()
+
+	// --- グレースフルシャットダウン ---
+	// Ctrl+C や docker stop のシグナルを待つ
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit // シグナルが来るまでここでブロック
+
+	log.Println("Shutting down...")
+	checker.Stop() // Workerを停止
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
+		log.Fatalf("Server shutdown error: %v", err)
 	}
+	log.Println("Server stopped")
 }

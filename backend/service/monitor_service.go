@@ -58,6 +58,11 @@ func (s *MonitorService) GetMonitor(ctx context.Context, id string) (*model.Moni
 	return s.repo.GetByID(ctx, id)
 }
 
+// GetActiveMonitors はアクティブなMonitorをすべて取得する（Worker用）
+func (s *MonitorService) GetActiveMonitors(ctx context.Context) ([]model.Monitor, error) {
+	return s.repo.GetAllActive(ctx)
+}
+
 // DeleteMonitor は指定IDのMonitorを削除する
 func (s *MonitorService) DeleteMonitor(ctx context.Context, id string) error {
 	return s.repo.Delete(ctx, id)
