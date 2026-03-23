@@ -7,9 +7,8 @@
 
 .fields {
   display: flex;
+  flex-direction: column;
   gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
 }
 
 .input {
@@ -20,6 +19,7 @@
   font-family: "Press Start 2P", monospace;
   font-size: 0.55rem;
   outline: none;
+  width: 100%;
 }
 
 .input:focus {
@@ -37,7 +37,8 @@
 }
 
 .intervalInput {
-  width: 65px;
+  width: 80px;
+  flex: none;
   text-align: center;
 }
 
@@ -56,6 +57,7 @@
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.1s;
+  width: 100%;
 }
 
 .button:hover {
