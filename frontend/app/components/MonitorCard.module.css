@@ -1,21 +1,20 @@
 .card {
-  background: #1e293b;
-  border-radius: 12px;
-  padding: 16px 20px;
-  border-left: 4px solid #6b7280;
-  transition: border-color 0.2s;
+  border: 3px solid #a0a0a0;
+  padding: 12px 16px;
+  background: #000;
+  border-left-width: 6px;
 }
 
 .healthy {
-  border-left-color: #10b981;
+  border-left-color: #00e800;
 }
 
 .unhealthy {
-  border-left-color: #ef4444;
+  border-left-color: #e80040;
 }
 
 .unknown {
-  border-left-color: #6b7280;
+  border-left-color: #585858;
 }
 
 .header {
@@ -28,48 +27,48 @@
 .info {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
 }
 
 .icon {
-  font-size: 1.1rem;
+  font-size: 0.8rem;
   flex-shrink: 0;
 }
 
 .name {
-  font-weight: 600;
-  color: #f1f5f9;
+  font-size: 0.65rem;
+  color: #fcfcfc;
   white-space: nowrap;
 }
 
 .url {
-  color: #64748b;
-  font-size: 0.85rem;
+  color: #585858;
+  font-size: 0.5rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .status {
-  color: #94a3b8;
-  font-size: 0.85rem;
-  padding-left: 30px;
+  color: #a0a0a0;
+  font-size: 0.5rem;
+  padding-left: 24px;
+  line-height: 1.8;
 }
 
 .deleteButton {
-  background: none;
-  border: 1px solid #475569;
-  border-radius: 6px;
-  color: #94a3b8;
-  padding: 4px 12px;
-  font-size: 0.8rem;
+  background: #000;
+  border: 3px solid #585858;
+  color: #a0a0a0;
+  padding: 4px 10px;
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.45rem;
   cursor: pointer;
-  transition: all 0.2s;
-  flex-shrink: 0;
+  transition: all 0.1s;
 }
 
 .deleteButton:hover {
-  border-color: #f43f5e;
-  color: #f43f5e;
+  border-color: #e80040;
+  color: #e80040;
 }
