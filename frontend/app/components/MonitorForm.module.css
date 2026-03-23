@@ -1,0 +1,75 @@
+.form {
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.fields {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.input {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #f1f5f9;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: #3b82f6;
+}
+
+.input::placeholder {
+  color: #64748b;
+}
+
+.intervalGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.intervalInput {
+  width: 70px;
+  text-align: center;
+}
+
+.intervalLabel {
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.button {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.button:hover {
+  background: #2563eb;
+}
+
+.button:disabled {
+  background: #475569;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #ef4444;
+  font-size: 0.85rem;
+  margin-top: 10px;
+}

@@ -1,0 +1,75 @@
+.card {
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 16px 20px;
+  border-left: 4px solid #6b7280;
+  transition: border-color 0.2s;
+}
+
+.healthy {
+  border-left-color: #10b981;
+}
+
+.unhealthy {
+  border-left-color: #ef4444;
+}
+
+.unknown {
+  border-left-color: #6b7280;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.name {
+  font-weight: 600;
+  color: #f1f5f9;
+  white-space: nowrap;
+}
+
+.url {
+  color: #64748b;
+  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  padding-left: 30px;
+}
+
+.deleteButton {
+  background: none;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  color: #94a3b8;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.deleteButton:hover {
+  border-color: #f43f5e;
+  color: #f43f5e;
+}

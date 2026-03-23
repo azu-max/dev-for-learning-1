@@ -1,3 +1,5 @@
+import "./globals.css";
+
 export const metadata = {
   title: "Health Check Dashboard",
   description: "Health Check Monitoring Service",
