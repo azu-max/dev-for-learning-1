@@ -29,6 +29,42 @@
 - [ ] カスタムエラー型の設計（Go の errors パッケージ活用）
 - [ ] パフォーマンスモニタリング設定（トランザクショントレーシング）
 
+### 3. フロントエンドMVP実装の振り返り
+
+以下の変更について座学 → クイズで理解を深める。
+
+#### Next.js / React
+- [ ] Next.js App Router の仕組み（`app/` ディレクトリ、`layout.tsx` と `page.tsx` の役割）
+- [ ] `"use client"` ディレクティブの意味（Server Components vs Client Components）
+- [ ] `useEffect` + `setInterval` によるポーリングの仕組みと注意点
+- [ ] `useCallback` を使う理由（不要な再レンダリングの防止）
+- [ ] CSS Modules の仕組み（クラス名のスコープ化、`.module.css` の命名規則）
+
+#### API 連携
+- [ ] Next.js `rewrites` によるプロキシの仕組み（なぜ CORS を回避できるのか）
+- [ ] `fetch` API の基本（GET / POST / DELETE、ヘッダー、レスポンス処理）
+- [ ] フロントエンドからのエラーハンドリングパターン
+
+#### バックエンド追加API
+- [ ] `LEFT JOIN LATERAL` の仕組み（通常の LEFT JOIN との違い、N+1 問題の回避）
+- [ ] `sql.NullString` / `sql.NullInt32` 等の Nullable 型の扱い方
+- [ ] クエリパラメータ `?include=latest_result` による後方互換の設計判断
+
+#### 実装したファイル一覧（参照用）
+
+| ファイル | 役割 |
+|---------|------|
+| `frontend/app/types/index.ts` | Monitor, CheckResult 等の型定義 |
+| `frontend/app/lib/api.ts` | API クライアント（fetch ラッパー） |
+| `frontend/app/components/SummaryCards.tsx` | Healthy / Unhealthy / Total のサマリー表示 |
+| `frontend/app/components/MonitorForm.tsx` | Monitor 追加フォーム |
+| `frontend/app/components/MonitorCard.tsx` | 個別 Monitor のステータスカード |
+| `frontend/app/components/MonitorList.tsx` | Monitor 一覧表示 |
+| `frontend/app/page.tsx` | ダッシュボードページ（30秒ポーリング） |
+| `frontend/next.config.ts` | rewrites 設定（API プロキシ） |
+| `backend/repository/monitor_repository.go` | `GetAllWithLatestResult()`（LEFT JOIN LATERAL） |
+| `backend/model/monitor.go` | `MonitorWithLatestResult` 構造体 |
+
 ## 背景
 
 Phase 2 で Sentry SDK の導入と基本的なエラーキャプチャ（ヘルスチェック接続エラー → Sentry送信）まで完了。
