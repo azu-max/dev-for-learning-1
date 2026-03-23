@@ -1,13 +1,33 @@
+# ============================================
+# Stage 1: Builder（ビルド用）
+# ============================================
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# 依存関係ファイルを先にコピー（キャッシュ活用）
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# ソースコードをコピーしてビルド
+COPY . .
+RUN npm run build
+
+# ============================================
+# Stage 2: Runner（実行用）
+# ============================================
 FROM node:20-alpine
 
 WORKDIR /app
 
-# 依存関係のキャッシュ
-COPY package.json package-lock.json* ./
-RUN npm install
+# 本番用の依存関係だけインストール
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
 
-# ソースコードをコピー
-COPY . .
+# ビルド成果物をコピー
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
 
-# 開発サーバー起動
-CMD ["npm", "run", "dev"]
+EXPOSE 3000
+
+CMD ["npm", "run", "start"]
