@@ -65,6 +65,23 @@
 | `backend/repository/monitor_repository.go` | `GetAllWithLatestResult()`（LEFT JOIN LATERAL） |
 | `backend/model/monitor.go` | `MonitorWithLatestResult` 構造体 |
 
+### 4. Docker / docker-compose 設定の振り返り
+
+以下の変更について座学 → クイズで理解を深める。
+
+#### Docker 基礎
+- [ ] マルチステージビルドの仕組み（なぜ Stage を分けるのか、イメージサイズへの影響）
+- [ ] `CGO_ENABLED=0` の意味（静的バイナリと動的バイナリの違い）
+- [ ] `npm ci` vs `npm install` の違い（なぜ Docker / CI では `npm ci` を使うのか）
+- [ ] `--omit=dev` で devDependencies を除外する理由
+- [ ] `.dockerignore` の役割（なぜ `node_modules` をコピーしないのか）
+
+#### docker-compose
+- [ ] `ports` vs `expose` の違い（ホスト公開 vs コンテナ間通信のみ）
+- [ ] `depends_on` + `condition: service_healthy` による起動順序制御
+- [ ] `restart: unless-stopped` の動作（コンテナが落ちたら自動再起動）
+- [ ] DB を `expose` のみにするセキュリティ上の理由
+
 ## 背景
 
 Phase 2 で Sentry SDK の導入と基本的なエラーキャプチャ（ヘルスチェック接続エラー → Sentry送信）まで完了。
