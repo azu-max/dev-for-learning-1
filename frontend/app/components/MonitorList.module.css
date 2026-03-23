@@ -1,0 +1,19 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: #585858;
+  font-size: 0.6rem;
+  border: 3px dashed #585858;
+}
+
+.emptyHint {
+  font-size: 0.5rem;
+  margin-top: 12px;
+  color: #a0a0a0;
+}

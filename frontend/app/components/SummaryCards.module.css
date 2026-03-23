@@ -1,0 +1,42 @@
+.container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.card {
+  flex: 1;
+  padding: 16px;
+  border: 3px solid #fcfcfc;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.count {
+  font-size: 1.5rem;
+}
+
+.label {
+  font-size: 0.55rem;
+  color: #a0a0a0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.healthy .count {
+  color: #00e800;
+  text-shadow: 2px 2px 0 #005800;
+}
+
+.unhealthy .count {
+  color: #e80040;
+  text-shadow: 2px 2px 0 #580018;
+}
+
+.total .count {
+  color: #00d8ff;
+  text-shadow: 2px 2px 0 #004860;
+}

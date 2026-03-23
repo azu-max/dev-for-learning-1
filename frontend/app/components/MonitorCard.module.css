@@ -1,0 +1,76 @@
+.card {
+  border: 3px solid #a0a0a0;
+  padding: 12px 16px;
+  background: #000;
+  border-left-width: 6px;
+}
+
+.healthy {
+  border-left-color: #00e800;
+}
+
+.unhealthy {
+  border-left-color: #e80040;
+}
+
+.unknown {
+  border-left-color: #585858;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.icon {
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.name {
+  font-size: 0.65rem;
+  color: #fcfcfc;
+  white-space: nowrap;
+}
+
+.url {
+  color: #585858;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status {
+  color: #a0a0a0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.8rem;
+  padding-left: 24px;
+  line-height: 1.8;
+}
+
+.deleteButton {
+  background: #000;
+  border: 3px solid #585858;
+  color: #a0a0a0;
+  padding: 4px 10px;
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.45rem;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.deleteButton:hover {
+  border-color: #e80040;
+  color: #e80040;
+}

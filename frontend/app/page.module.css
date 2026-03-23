@@ -1,0 +1,55 @@
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 4px solid #fcfcfc;
+}
+
+.title {
+  font-size: 1rem;
+  color: #00d8ff;
+  text-shadow: 2px 2px 0 #0050a0;
+}
+
+.apiStatus {
+  font-size: 0.6rem;
+  padding: 6px 12px;
+  border: 3px solid #fcfcfc;
+  color: #a0a0a0;
+}
+
+.apiOk {
+  color: #00e800;
+  border-color: #00e800;
+}
+
+.apiDown {
+  color: #e80040;
+  border-color: #e80040;
+}
+
+.main {
+  flex: 1;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 4px solid #fcfcfc;
+  color: #a0a0a0;
+  font-size: 0.5rem;
+  line-height: 1.8;
+}
