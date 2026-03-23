@@ -16,8 +16,8 @@
   border: 3px solid #a0a0a0;
   padding: 8px 10px;
   color: #fcfcfc;
-  font-family: "Press Start 2P", monospace;
-  font-size: 0.55rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.9rem;
   outline: none;
   width: 100%;
 }
@@ -44,7 +44,8 @@
 
 .intervalLabel {
   color: #a0a0a0;
-  font-size: 0.55rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.85rem;
 }
 
 .button {
