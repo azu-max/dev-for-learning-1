@@ -11,6 +11,7 @@ RUN npm ci
 
 # ソースコードをコピーしてビルド
 COPY . .
+RUN mkdir -p public
 RUN npm run build
 
 # ============================================
