@@ -63,6 +63,11 @@ func (s *MonitorService) GetActiveMonitors(ctx context.Context) ([]model.Monitor
 	return s.repo.GetAllActive(ctx)
 }
 
+// GetAllMonitorsWithLatestResult はすべてのMonitorと最新チェック結果を取得する
+func (s *MonitorService) GetAllMonitorsWithLatestResult(ctx context.Context) ([]model.MonitorWithLatestResult, error) {
+	return s.repo.GetAllWithLatestResult(ctx)
+}
+
 // DeleteMonitor は指定IDのMonitorを削除する
 func (s *MonitorService) DeleteMonitor(ctx context.Context, id string) error {
 	return s.repo.Delete(ctx, id)
