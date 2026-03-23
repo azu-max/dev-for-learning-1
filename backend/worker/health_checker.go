@@ -2,6 +2,7 @@ package worker
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -9,6 +10,7 @@ import (
 	"github.com/azu-max/dev-for-learning-1/backend/model"
 	"github.com/azu-max/dev-for-learning-1/backend/repository"
 	"github.com/azu-max/dev-for-learning-1/backend/service"
+	"github.com/getsentry/sentry-go"
 )
 
 // HealthChecker は定期的にMonitorのURLをチェックするWorker
@@ -117,6 +119,13 @@ func (h *HealthChecker) checkOne(m model.Monitor) *model.CheckResult {
 		result.StatusCode = 0
 		result.IsHealthy = false
 		result.ErrorMessage = err.Error()
+
+		sentry.WithScope(func(scope *sentry.Scope) {
+			scope.SetTag("monitor_name", m.Name)
+			scope.SetTag("monitor_url", m.URL)
+			scope.SetLevel(sentry.LevelError)
+			sentry.CaptureException(fmt.Errorf("health check failed for %s: %w", m.Name, err))
+		})
 		return result
 	}
 	defer resp.Body.Close()

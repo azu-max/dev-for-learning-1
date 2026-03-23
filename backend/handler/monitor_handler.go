@@ -56,7 +56,24 @@ func (h *MonitorHandler) HandleMonitorByID(w http.ResponseWriter, r *http.Reques
 }
 
 // getAll はすべてのMonitorを返す
+// include=latest_result クエリパラメータで最新チェック結果も含められる
 func (h *MonitorHandler) getAll(w http.ResponseWriter, r *http.Request) {
+	include := r.URL.Query().Get("include")
+
+	if include == "latest_result" {
+		results, err := h.svc.GetAllMonitorsWithLatestResult(r.Context())
+		if err != nil {
+			log.Printf("ERROR: failed to get monitors with results: %v", err)
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+			return
+		}
+		if results == nil {
+			results = []model.MonitorWithLatestResult{}
+		}
+		respondJSON(w, http.StatusOK, results)
+		return
+	}
+
 	monitors, err := h.svc.GetAllMonitors(r.Context())
 	if err != nil {
 		log.Printf("ERROR: failed to get monitors: %v", err)
@@ -64,7 +81,6 @@ func (h *MonitorHandler) getAll(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// nilの場合は空配列を返す（JSONで null にならないように）
 	if monitors == nil {
 		monitors = []model.Monitor{}
 	}

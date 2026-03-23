@@ -112,6 +112,61 @@ func (r *MonitorRepository) GetAllActive(ctx context.Context) ([]model.Monitor, 
 	return monitors, nil
 }
 
+// GetAllWithLatestResult はすべてのMonitorと最新チェック結果を取得する
+func (r *MonitorRepository) GetAllWithLatestResult(ctx context.Context) ([]model.MonitorWithLatestResult, error) {
+	query := `
+		SELECT
+			m.id, m.name, m.url, m.interval_seconds, m.is_active, m.created_at, m.updated_at,
+			cr.id, cr.status_code, cr.response_time, cr.is_healthy, cr.error_message, cr.checked_at
+		FROM monitors m
+		LEFT JOIN LATERAL (
+			SELECT * FROM check_results
+			WHERE monitor_id = m.id
+			ORDER BY checked_at DESC
+			LIMIT 1
+		) cr ON true
+		ORDER BY m.created_at DESC`
+
+	rows, err := r.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []model.MonitorWithLatestResult
+	for rows.Next() {
+		var mwr model.MonitorWithLatestResult
+		var crID, crErrorMessage sql.NullString
+		var crStatusCode, crResponseTime sql.NullInt32
+		var crIsHealthy sql.NullBool
+		var crCheckedAt sql.NullTime
+
+		err := rows.Scan(
+			&mwr.ID, &mwr.Name, &mwr.URL, &mwr.IntervalSeconds, &mwr.IsActive, &mwr.CreatedAt, &mwr.UpdatedAt,
+			&crID, &crStatusCode, &crResponseTime, &crIsHealthy, &crErrorMessage, &crCheckedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		if crID.Valid {
+			mwr.LatestResult = &model.CheckResult{
+				ID:           crID.String,
+				MonitorID:    mwr.ID,
+				StatusCode:   int(crStatusCode.Int32),
+				ResponseTime: int(crResponseTime.Int32),
+				IsHealthy:    crIsHealthy.Bool,
+				ErrorMessage: crErrorMessage.String,
+				CheckedAt:    crCheckedAt.Time,
+			}
+		}
+
+		results = append(results, mwr)
+	}
+
+	return results, nil
+}
+
 // Delete は指定IDのMonitorをDBから削除する
 func (r *MonitorRepository) Delete(ctx context.Context, id string) error {
 	query := `DELETE FROM monitors WHERE id = $1`
